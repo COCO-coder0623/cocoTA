@@ -21,3 +21,41 @@ export const formatDate = (date: Date): string => {
     minute: '2-digit'
   });
 };
+
+export const isSameDay = (date1: Date, date2: Date): boolean => {
+  return date1.getFullYear() === date2.getFullYear() &&
+         date1.getMonth() === date2.getMonth() &&
+         date1.getDate() === date2.getDate();
+};
+
+export const formatCalendarDate = (date: Date): string => {
+  return date.toLocaleDateString([], { 
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long', 
+    day: 'numeric'
+  });
+};
+
+export const getCalendarDays = (year: number, month: number): Date[] => {
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const startDate = new Date(firstDay);
+  const endDate = new Date(lastDay);
+  
+  // Start from the beginning of the week
+  startDate.setDate(startDate.getDate() - startDate.getDay());
+  
+  // End at the end of the week
+  endDate.setDate(endDate.getDate() + (6 - endDate.getDay()));
+  
+  const days: Date[] = [];
+  const currentDate = new Date(startDate);
+  
+  while (currentDate <= endDate) {
+    days.push(new Date(currentDate));
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+  
+  return days;
+};

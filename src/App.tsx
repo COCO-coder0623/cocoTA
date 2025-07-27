@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { Brain, Utensils, Plus, Sparkles, Target, History } from 'lucide-react';
+import Navigation from './components/Navigation';
 import CameraCapture from './components/CameraCapture';
 import FoodEntry from './components/FoodEntry';
 import DailySummary from './components/DailySummary';
 import GoalsTab from './components/GoalsTab';
+import CalendarPage from './components/CalendarPage';
 import { useFoodAnalysis } from './hooks/useFoodAnalysis';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { FoodEntry as FoodEntryType, DailyGoals } from './types/food';
 import { calculateTotalMacros } from './utils/macroCalculations';
 import { isWithin24Hours, formatDate } from './utils/dateUtils';
 
-type TabType = 'tracker' | 'goals';
+type TabType = 'tracker' | 'goals' | 'calendar';
 
 function App() {
   const [foodEntries, setFoodEntries] = useLocalStorage<FoodEntryType[]>('foodEntries', []);
@@ -87,30 +89,13 @@ function App() {
           </div>
           
           {/* Navigation Tabs */}
-          <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
-            <button
-              onClick={() => {setActiveTab('tracker'); setShowCapture(false);}}
-              className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md font-medium transition-all duration-200 ${
-                activeTab === 'tracker'
-                  ? 'bg-white text-emerald-600 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              <History className="w-4 h-4" />
-              Tracker
-            </button>
-            <button
-              onClick={() => {setActiveTab('goals'); setShowCapture(false);}}
-              className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md font-medium transition-all duration-200 ${
-                activeTab === 'goals'
-                  ? 'bg-white text-purple-600 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              <Target className="w-4 h-4" />
-              Goals
-            </button>
-          </div>
+          <Navigation 
+            activeTab={activeTab} 
+            onTabChange={(tab) => {
+              setActiveTab(tab);
+              setShowCapture(false);
+            }} 
+          />
         </div>
       </header>
 
@@ -192,6 +177,10 @@ function App() {
 
         {activeTab === 'goals' && (
           <GoalsTab goals={dailyGoals} onGoalsUpdate={handleGoalsUpdate} />
+        )}
+
+        {activeTab === 'calendar' && (
+          <CalendarPage foodEntries={parsedEntries} goals={dailyGoals} />
         )}
       </main>
     </div>

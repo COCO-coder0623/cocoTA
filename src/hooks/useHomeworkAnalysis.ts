@@ -10,6 +10,8 @@ interface HomeworkAnalysisResult {
   knowledgeAreas: KnowledgeAreas;
   weakPoints: string[];
   strengths: string[];
+  errorAnalysis: string;
+  solutionApproach: string;
 }
 
 export const useHomeworkAnalysis = () => {
@@ -61,7 +63,9 @@ export const useHomeworkAnalysis = () => {
     "measurement": number (0-100)
   },
   "weakPoints": ["array of specific areas needing improvement"],
-  "strengths": ["array of areas where student performed well"]
+  "strengths": ["array of areas where student performed well"],
+  "errorAnalysis": "detailed analysis of errors if answer is incorrect, empty string if correct",
+  "solutionApproach": "step-by-step solution method if answer is incorrect, empty string if correct"
 }
 
 Analyze:
@@ -70,6 +74,8 @@ Analyze:
 3. Which knowledge areas are demonstrated
 4. Specific strengths and weaknesses
 5. Rate completeness and logic coherence (0-100)
+6. If answers are incorrect, provide detailed error analysis explaining what went wrong
+7. If answers are incorrect, provide step-by-step solution approach showing the correct method
 
 Return only the JSON object, no additional text.`
                 },

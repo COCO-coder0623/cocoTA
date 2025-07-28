@@ -16,6 +16,8 @@ export interface AssessmentResult {
   knowledgeAreas: KnowledgeAreas;
   weakPoints: string[];
   strengths: string[];
+  errorAnalysis: string;
+  solutionApproach: string;
   imageUrl: string;
   timestamp: Date;
 }

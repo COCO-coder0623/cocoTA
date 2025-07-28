@@ -55,6 +55,8 @@ function App() {
         knowledgeAreas: result.knowledgeAreas,
         weakPoints: result.weakPoints,
         strengths: result.strengths,
+        errorAnalysis: result.errorAnalysis,
+        solutionApproach: result.solutionApproach,
         imageUrl,
         timestamp: new Date(),
       };

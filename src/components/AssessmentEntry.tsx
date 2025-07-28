@@ -12,6 +12,8 @@ interface AssessmentEntryProps {
   knowledgeAreas: KnowledgeAreas;
   weakPoints: string[];
   strengths: string[];
+  errorAnalysis: string;
+  solutionApproach: string;
   imageUrl: string;
   timestamp: Date;
 }
@@ -25,6 +27,8 @@ const AssessmentEntry: React.FC<AssessmentEntryProps> = ({
   knowledgeAreas,
   weakPoints,
   strengths,
+  errorAnalysis,
+  solutionApproach,
   imageUrl, 
   timestamp 
 }) => {
@@ -106,6 +110,31 @@ const AssessmentEntry: React.FC<AssessmentEntryProps> = ({
 
         {/* Strengths and Weak Points */}
         <div className="space-y-3">
+          {/* Error Analysis and Solution - Only show if incorrect */}
+          {!isCorrect && (errorAnalysis || solutionApproach) && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 space-y-3">
+              {errorAnalysis && (
+                <div>
+                  <h4 className="text-sm font-medium text-red-800 mb-2 flex items-center gap-1">
+                    <AlertTriangle className="w-4 h-4" />
+                    Error Analysis
+                  </h4>
+                  <p className="text-sm text-red-700 leading-relaxed">{errorAnalysis}</p>
+                </div>
+              )}
+              
+              {solutionApproach && (
+                <div>
+                  <h4 className="text-sm font-medium text-red-800 mb-2 flex items-center gap-1">
+                    <CheckCircle className="w-4 h-4" />
+                    Correct Solution Approach
+                  </h4>
+                  <p className="text-sm text-red-700 leading-relaxed whitespace-pre-line">{solutionApproach}</p>
+                </div>
+              )}
+            </div>
+          )}
+
           {strengths.length > 0 && (
             <div>
               <h4 className="text-sm font-medium text-green-700 mb-1 flex items-center gap-1">

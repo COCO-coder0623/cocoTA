@@ -34,21 +34,23 @@ export const useHomeworkAnalysis = () => {
       });
 
       // Call OpenAI API for homework analysis
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'gpt-4o',
-          messages: [
-            {
-              role: 'user',
-              content: [
-                {
-                  type: 'text',
-                  text: `Analyze this primary school mathematics homework image and provide a response in the following JSON format:
+      let response;
+      try {
+        response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'gpt-4o',
+            messages: [
+              {
+                role: 'user',
+                content: [
+                  {
+                    type: 'text',
+                    text: `Analyze this primary school mathematics homework image and provide a response in the following JSON format:
 {
   "description": "Brief description of the math problems shown",
   "subject": "Mathematics",
@@ -78,20 +80,24 @@ Analyze:
 7. If answers are incorrect, provide step-by-step solution approach showing the correct method
 
 Return only the JSON object, no additional text.`
-                },
-                {
-                  type: 'image_url',
-                  image_url: {
-                    url: `data:image/jpeg;base64,${base64Image}`
+                  },
+                  {
+                    type: 'image_url',
+                    image_url: {
+                      url: `data:image/jpeg;base64,${base64Image}`
+                    }
                   }
-                }
-              ]
-            }
-          ],
-          max_tokens: 500,
-          temperature: 0.1
-        }),
-      });
+                ]
+              }
+            ],
+            max_tokens: 500,
+            temperature: 0.1
+          }),
+        });
+      } catch (fetchError) {
+        console.error('Network error:', fetchError);
+        throw new Error('Network error: Unable to connect to OpenAI API. This may be due to CORS restrictions when calling external APIs directly from the browser. Consider using a backend proxy or edge function.');
+      }
 
       if (!response.ok) {
         const error = await response.text();

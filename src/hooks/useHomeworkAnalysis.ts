@@ -102,7 +102,15 @@ Return only the JSON object, no additional text.`
       // Parse the JSON response
       let analysisResult: HomeworkAnalysisResult;
       try {
-        analysisResult = JSON.parse(content);
+        // Remove markdown code block delimiters if present
+        let cleanContent = content.trim();
+        if (cleanContent.startsWith('```json') && cleanContent.endsWith('```')) {
+          cleanContent = cleanContent.slice(7, -3).trim(); // Remove ```json from start and ``` from end
+        } else if (cleanContent.startsWith('```') && cleanContent.endsWith('```')) {
+          cleanContent = cleanContent.slice(3, -3).trim(); // Remove ``` from both ends
+        }
+        
+        analysisResult = JSON.parse(cleanContent);
       } catch (parseError) {
         console.error('Failed to parse OpenAI response:', content);
         throw new Error('Invalid response format from AI analysis');

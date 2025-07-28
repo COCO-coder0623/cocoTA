@@ -70,14 +70,30 @@ export const useHomeworkAnalysis = () => {
   "solutionApproach": "step-by-step solution method if answer is incorrect, empty string if correct"
 }
 
-Analyze:
-1. Whether the mathematical answers are correct
-2. If solution steps are complete and logical
-3. Which knowledge areas are demonstrated
-4. Specific strengths and weaknesses
-5. Rate completeness and logic coherence (0-100)
-6. If answers are incorrect, provide detailed error analysis explaining what went wrong
-7. If answers are incorrect, provide step-by-step solution approach showing the correct method
+CRITICAL ANALYSIS REQUIREMENTS:
+1. CORRECTNESS ASSESSMENT: Carefully examine each mathematical answer and solution step. Mark as correct ONLY if all answers and methods are mathematically accurate.
+
+2. ERROR ANALYSIS (if incorrect): Provide detailed analysis including:
+   - Identify specific calculation errors or conceptual mistakes
+   - Explain why the student's approach was wrong
+   - Point out any missing steps or logical gaps
+   - Highlight misconceptions that led to the error
+
+3. SOLUTION APPROACH (if incorrect): Provide clear, step-by-step solution:
+   - Break down the problem into manageable steps
+   - Show the correct mathematical operations
+   - Explain the reasoning behind each step
+   - Provide the correct final answer
+   - Use simple language appropriate for primary school students
+
+4. ASSESSMENT CRITERIA:
+   - Rate completeness based on how much of the problem was attempted
+   - Rate logic coherence based on the mathematical reasoning shown
+   - Identify demonstrated knowledge areas and rate proficiency (0-100)
+   - List specific strengths (what the student did well)
+   - List specific weak points (areas needing improvement)
+
+Be thorough in your analysis - this feedback will help the student learn from their mistakes and improve their mathematical understanding.
 
 Return only the JSON object, no additional text.`
                   },

@@ -1,13 +1,13 @@
 import React, { useRef, useState } from 'react';
-import { Camera, Upload, X, Check, Loader2, AlertCircle } from 'lucide-react';
+import { Camera, Upload, X, Check, Loader2, AlertCircle, BookOpen } from 'lucide-react';
 
-interface CameraCaptureProps {
+interface HomeworkCaptureProps {
   onImageCapture: (imageUrl: string, file: File) => void;
   isAnalyzing: boolean;
   error?: string | null;
 }
 
-const CameraCapture: React.FC<CameraCaptureProps> = ({ onImageCapture, isAnalyzing, error }) => {
+const HomeworkCapture: React.FC<HomeworkCaptureProps> = ({ onImageCapture, isAnalyzing, error }) => {
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [capturedFile, setCapturedFile] = useState<File | null>(null);
   const [showCamera, setShowCamera] = useState(false);
@@ -53,7 +53,7 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onImageCapture, isAnalyzi
         context.drawImage(video, 0, 0);
         canvas.toBlob((blob) => {
           if (blob) {
-            const file = new File([blob], 'captured-food.jpg', { type: 'image/jpeg' });
+            const file = new File([blob], 'homework-photo.jpg', { type: 'image/jpeg' });
             const imageUrl = URL.createObjectURL(blob);
             setCapturedImage(imageUrl);
             setCapturedFile(file);
@@ -93,7 +93,7 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onImageCapture, isAnalyzi
       <div className="relative bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <img 
           src={capturedImage} 
-          alt="Captured food"
+          alt="Captured homework"
           className="w-full h-64 object-cover"
         />
         
@@ -109,14 +109,14 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onImageCapture, isAnalyzi
           )}
           
           <p className="text-gray-600 text-sm mb-4">
-            {error ? 'Please try again or upload a different image' : 'Ready to analyze this food?'}
+            {error ? 'Please try again or upload a different image' : 'Ready to analyze this homework?'}
           </p>
           
           <div className="flex gap-3">
             <button
               onClick={confirmImage}
               disabled={isAnalyzing}
-              className="flex-1 bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-300 text-white py-3 px-4 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2"
+              className="flex-1 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white py-3 px-4 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2"
             >
               {isAnalyzing ? (
                 <>
@@ -126,7 +126,7 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onImageCapture, isAnalyzi
               ) : (
                 <>
                   <Check className="w-4 h-4" />
-                  {error ? 'Try Again' : 'Analyze Food'}
+                  {error ? 'Try Again' : 'Analyze Homework'}
                 </>
               )}
             </button>
@@ -174,15 +174,15 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onImageCapture, isAnalyzi
 
   return (
     <div className="space-y-4">
-      <div className="bg-gradient-to-br from-emerald-50 to-blue-50 rounded-xl p-8 text-center border border-gray-200">
-        <Camera className="w-12 h-12 text-emerald-500 mx-auto mb-4" />
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">Capture Your Food</h3>
-        <p className="text-gray-600 mb-6">Take a photo or upload an image to get instant AI-powered nutritional analysis</p>
+      <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-8 text-center border border-gray-200">
+        <BookOpen className="w-12 h-12 text-blue-500 mx-auto mb-4" />
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">Upload Homework</h3>
+        <p className="text-gray-600 mb-6">Take a photo or upload an image of student homework to get instant AI-powered assessment and feedback</p>
         
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
             onClick={startCamera}
-            className="bg-emerald-500 hover:bg-emerald-600 text-white py-3 px-6 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2"
+            className="bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2"
           >
             <Camera className="w-4 h-4" />
             Take Photo
@@ -190,7 +190,7 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onImageCapture, isAnalyzi
           
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2"
+            className="bg-purple-500 hover:bg-purple-600 text-white py-3 px-6 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2"
           >
             <Upload className="w-4 h-4" />
             Upload Image
@@ -209,4 +209,4 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onImageCapture, isAnalyzi
   );
 };
 
-export default CameraCapture;
+export default HomeworkCapture;

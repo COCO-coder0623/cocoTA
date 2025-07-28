@@ -1,7 +1,7 @@
 import React from 'react';
-import { History, Target, Calendar, Brain } from 'lucide-react';
+import { BookOpen, Target, Calendar } from 'lucide-react';
 
-type TabType = 'tracker' | 'goals' | 'calendar';
+type TabType = 'assessment' | 'goals' | 'calendar';
 
 interface NavigationProps {
   activeTab: TabType;
@@ -10,7 +10,7 @@ interface NavigationProps {
 
 const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
   const tabs = [
-    { id: 'tracker' as TabType, label: 'Tracker', icon: History },
+    { id: 'assessment' as TabType, label: 'Assessment', icon: BookOpen },
     { id: 'goals' as TabType, label: 'Goals', icon: Target },
     { id: 'calendar' as TabType, label: 'Calendar', icon: Calendar },
   ];
@@ -23,8 +23,8 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
           onClick={() => onTabChange(id)}
           className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md font-medium transition-all duration-200 ${
             activeTab === id
-              ? id === 'tracker' 
-                ? 'bg-white text-emerald-600 shadow-sm'
+              ? id === 'assessment' 
+                ? 'bg-white text-blue-600 shadow-sm'
                 : id === 'goals'
                 ? 'bg-white text-purple-600 shadow-sm'
                 : 'bg-white text-blue-600 shadow-sm'

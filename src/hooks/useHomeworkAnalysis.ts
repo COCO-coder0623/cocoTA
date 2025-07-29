@@ -47,11 +47,28 @@ export const useHomeworkAnalysis = () => {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Analysis failed');
+        let errorMessage = 'Analysis failed';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorMessage;
+        } catch {
+          // If we can't parse the error response, use the status text
+          errorMessage = response.statusText || errorMessage;
+        }
+        throw new Error(errorMessage);
       }
 
-      const analysisResult = await response.json();
+      let analysisResult;
+      try {
+        const responseText = await response.text();
+        if (!responseText.trim()) {
+          throw new Error('Empty response from server');
+        }
+        analysisResult = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('Failed to parse response:', parseError);
+        throw new Error('Invalid response format from server');
+      }
 
       return analysisResult;
 

@@ -150,7 +150,7 @@ Return only the JSON object, no additional text.`
       throw new Error('No content received from OpenAI');
     }
 
-    // Parse the JSON response
+    // Parse the JSON response with better error handling
     let analysisResult: HomeworkAnalysisResult;
     try {
       // Remove markdown code block delimiters if present
@@ -161,25 +161,52 @@ Return only the JSON object, no additional text.`
         cleanContent = cleanContent.slice(3, -3).trim();
       }
       
+      if (!cleanContent) {
+        throw new Error('Empty content after cleaning');
+      }
+      
       analysisResult = JSON.parse(cleanContent);
+      
+      // Validate required fields
+      if (!analysisResult.description || !analysisResult.subject) {
+        throw new Error('Missing required fields in analysis result');
+      }
+      
     } catch (parseError) {
       console.error('Failed to parse OpenAI response:', content);
+      console.error('Parse error:', parseError);
       throw new Error('Invalid response format from AI analysis');
     }
 
-    // Validate and ensure proper data types
+    // Validate and ensure proper data types with defaults
     analysisResult.completeness = Math.round(Number(analysisResult.completeness) || 0);
     analysisResult.logicCoherence = Math.round(Number(analysisResult.logicCoherence) || 0);
+    analysisResult.isCorrect = Boolean(analysisResult.isCorrect);
+    analysisResult.weakPoints = Array.isArray(analysisResult.weakPoints) ? analysisResult.weakPoints : [];
+    analysisResult.strengths = Array.isArray(analysisResult.strengths) ? analysisResult.strengths : [];
+    analysisResult.errorAnalysis = String(analysisResult.errorAnalysis || '');
+    analysisResult.solutionApproach = String(analysisResult.solutionApproach || '');
     
-    // Ensure knowledge areas are properly formatted
-    Object.keys(analysisResult.knowledgeAreas).forEach(key => {
-      analysisResult.knowledgeAreas[key as keyof KnowledgeAreas] = 
-        Math.round(Number(analysisResult.knowledgeAreas[key as keyof KnowledgeAreas]) || 0);
+    // Ensure knowledge areas are properly formatted with defaults
+    const defaultKnowledgeAreas: KnowledgeAreas = {
+      arithmetic: 0,
+      geometry: 0,
+      fractions: 0,
+      wordProblems: 0,
+      measurement: 0
+    };
+    
+    analysisResult.knowledgeAreas = analysisResult.knowledgeAreas || defaultKnowledgeAreas;
+    Object.keys(defaultKnowledgeAreas).forEach(key => {
+      const typedKey = key as keyof KnowledgeAreas;
+      analysisResult.knowledgeAreas[typedKey] = 
+        Math.round(Number(analysisResult.knowledgeAreas[typedKey]) || 0);
     });
 
     return new Response(
       JSON.stringify(analysisResult),
       {
+        status: 200,
         headers: {
           ...corsHeaders,
           'Content-Type': 'application/json',

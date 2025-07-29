@@ -47,13 +47,20 @@ export const useHomeworkAnalysis = () => {
         'Content-Type': 'application/json',
       };
 
+      console.log('Frontend: Making request to:', apiUrl);
+      console.log('Frontend: Using Supabase URL:', supabaseUrl);
+      
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers,
         body: JSON.stringify({ image: base64Image }),
       });
 
+      console.log('Frontend: Response status:', response.status);
+      console.log('Frontend: Response headers:', Object.fromEntries(response.headers.entries()));
+      
       if (!response.ok) {
+        console.log('Frontend: Response not OK, status:', response.status);
         let errorMessage = 'Analysis failed';
         try {
           const errorData = await response.json();

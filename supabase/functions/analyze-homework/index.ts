@@ -15,6 +15,8 @@
 
 import { corsHeaders } from '../_shared/cors.ts';
 
+console.log('Edge Function: analyze-homework is starting...');
+
 interface AnalysisRequest {
   image: string; // base64 encoded image
 }
@@ -43,8 +45,11 @@ interface HomeworkAnalysisResult {
 const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
 
 Deno.serve(async (req: Request) => {
+  console.log(`Edge Function: Received ${req.method} request to ${req.url}`);
+  
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
+    console.log('Edge Function: Handling CORS preflight request');
     return new Response(null, {
       status: 200,
       headers: corsHeaders,
@@ -52,6 +57,8 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
+    console.log('Edge Function: Processing homework analysis request');
+    
     if (!OPENAI_API_KEY) {
       throw new Error('OpenAI API key not configured');
     }
@@ -59,9 +66,11 @@ Deno.serve(async (req: Request) => {
     const { image }: AnalysisRequest = await req.json();
 
     if (!image) {
+      console.log('Edge Function: No image provided in request');
       throw new Error('No image provided');
     }
 
+    console.log('Edge Function: Making request to OpenAI API');
     // Call OpenAI GPT-4o Vision API
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -139,14 +148,17 @@ Return only the JSON object, no additional text.`
     });
 
     if (!response.ok) {
+      console.log('Edge Function: OpenAI API error:', response.status, response.statusText);
       const error = await response.text();
       throw new Error(`OpenAI API error: ${error}`);
     }
 
     const openaiResult = await response.json();
+    console.log('Edge Function: Received response from OpenAI');
     const content = openaiResult.choices[0]?.message?.content;
 
     if (!content) {
+      console.log('Edge Function: No content in OpenAI response');
       throw new Error('No content received from OpenAI');
     }
 
@@ -161,6 +173,8 @@ Return only the JSON object, no additional text.`
         cleanContent = cleanContent.slice(3, -3).trim();
       }
       
+      console.log('Edge Function: Parsing analysis result');
+      
       if (!cleanContent) {
         throw new Error('Empty content after cleaning');
       }
@@ -173,12 +187,14 @@ Return only the JSON object, no additional text.`
       }
       
     } catch (parseError) {
+      console.log('Edge Function: JSON parsing error:', parseError);
       console.error('Failed to parse OpenAI response:', content);
       console.error('Parse error:', parseError);
       throw new Error('Invalid response format from AI analysis');
     }
 
     // Validate and ensure proper data types with defaults
+    console.log('Edge Function: Validating and formatting response');
     analysisResult.completeness = Math.round(Number(analysisResult.completeness) || 0);
     analysisResult.logicCoherence = Math.round(Number(analysisResult.logicCoherence) || 0);
     analysisResult.isCorrect = Boolean(analysisResult.isCorrect);
@@ -203,6 +219,7 @@ Return only the JSON object, no additional text.`
         Math.round(Number(analysisResult.knowledgeAreas[typedKey]) || 0);
     });
 
+    console.log('Edge Function: Returning successful response');
     return new Response(
       JSON.stringify(analysisResult),
       {
@@ -215,6 +232,7 @@ Return only the JSON object, no additional text.`
     );
 
   } catch (error) {
+    console.error('Edge Function: Unexpected error:', error);
     console.error('Homework analysis error:', error);
     
     return new Response(

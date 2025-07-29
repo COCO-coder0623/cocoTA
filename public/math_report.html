@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>三年级数学作业批改</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --primary: #2196f3;
+      --primary-light: #e3f2fd;
+      --success: #4caf50;
+      --error: #f44336;
+      --warning: #ffd600;
+      --text: #2c3e50;
+      --text-light: #546e7a;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 8px;
+      --shadow: 0 8px 32px rgba(0,0,0,0.08);
+    }
+    body {
+      margin: 0;
+      padding: 20px;
+      background: var(--bg);
+      font-family: -apple-system, "微软雅黑", sans-serif;
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .center-box {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(33,150,243,0.10);
+      padding: 32px 24px 24px 24px;
+      text-align: center;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px;
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--primary-light);
+    }
+    h1 {
+      font-size: 32px;
+      color: var(--primary);
+      margin: 0 0 8px;
+      font-weight: 700;
+    }
+    .subtitle {
+      color: var(--text-light);
+      font-size: 18px;
+    }
+    .section {
+      margin: 40px 0;
+    }
+    .section-title {
+      font-size: 24px;
+      color: var(--primary);
+      margin: 0 0 20px;
+      padding-left: 16px;
+      border-left: 4px solid var(--primary);
+      font-weight: 600;
+    }
+    .card {
+      background: var(--primary-light);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin-bottom: 20px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .question {
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+    .answer {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 12px 0;
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.7);
+      border-radius: var(--radius-sm);
+    }
+    .correct {
+      color: var(--success);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .correct::before {
+      content: '✓';
+      font-size: 18px;
+    }
+    .wrong {
+      color: var(--error);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .wrong::before {
+      content: '✗';
+      font-size: 18px;
+    }
+    .explain {
+      background: #fff;
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      margin-top: 12px;
+      font-size: 15px;
+      border-left: 4px solid var(--warning);
+      color: var(--text-light);
+    }
+    .summary {
+      background: var(--primary-light);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin-top: 40px;
+    }
+    .footer {
+      text-align: center;
+      color: #2196f3;
+      margin-top: 36px;
+      font-size: 1.08em;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    .summary-title {
+      font-size: 20px;
+      color: var(--primary);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .summary-title::before {
+      content: '📝';
+      font-size: 24px;
+    }
+    .error-point {
+      background: white;
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      margin: 16px 0;
+    }
+    .error-title {
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+    .knowledge {
+      color: var(--error);
+      margin: 8px 0;
+      font-size: 15px;
+    }
+    .tip {
+      color: var(--primary);
+      margin: 8px 0;
+      font-size: 15px;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 2px solid var(--primary-light);
+      color: var(--primary);
+      font-size: 18px;
+      font-weight: 500;
+    }
+    @media (max-width: 768px) {
+      body { padding: 12px; }
+      .container { padding: 24px; }
+      .section-title { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🌟 数学作业批改报告</h1>
+      <div class="subtitle">让我们一起学习和提高 📚</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">一、判断题（10分）</div>
+    <div class="card">
+      <div class="question">3.88888 是循环小数</div>
+      <div class="answer">
+        <span>你的答案：X</span>
+        <span class="correct">正确</span>
+      </div>
+      <div class="explain">
+        <div>💡 解析：3.88888不是循环小数，是有限小数。数字不会无限重复。</div>
+      </div>
+    </div>
+    <div class="card">
+      <span class="star">★</span>2a÷2=b，a与b成正比例。<br>
+      答案：√ <span class="correct">✔正确</span>
+      <div class="explain">a和b成正比例关系。</div>
+    </div>
+    <div class="card">
+      <span class="star">★</span>某数的小数点向右移动两位，再向左移动一位，则新数扩大到原来的9倍。<br>
+      答案：X <span class="correct">✔正确</span>
+      <div class="explain">向右两位是乘100，向左一位是除以10，结果是乘10，不是乘9。</div>
+    </div>
+    <div class="card">
+      <span class="star">★</span>一个长方体的四个侧面面积与体积和一样大。<br>
+      答案：X <span class="correct">✔正确</span>
+      <div class="explain">面积和体积单位不同，数值一般不会相等。</div>
+    </div>
+    <div class="card">
+      <span class="star">★</span>甲数是乙数的80%，则乙数是甲数的120%。<br>
+      答案：X <span class="correct">✔正确</span>
+      <div class="explain">乙数=甲数÷80%×100%=甲数×1.25=甲数的125%。</div>
+    </div>
+
+    <div class="section-title">二、填空题（每题3分，共30分）</div>
+    <div class="card">
+      能同时被2、3、5整除的最大三位数是______。<br>
+      答案：990 <span class="correct">✔正确</span>
+      <div class="explain">2、3、5的最小公倍数是30，最大三位数能被30整除的是990。</div>
+    </div>
+    <div class="card">
+      一个长方体切成3个一样的小正方体，总表面积增加100cm²，原来长方体的表面积是______cm²。<br>
+      答案：300 <span class="correct">✔正确</span>
+      <div class="explain">切成3个正方体后表面积增加100，原面积=新面积-100。</div>
+    </div>
+    <div class="card">
+      甲是2×3×a，乙是5×3×a，它们的最小公倍数是210，则a=______，两数的最大公约数=______。<br>
+      答案：a=7，最大公约数=15a <span class="correct">✔正确</span>
+      <div class="explain">甲=6a，乙=15a，最小公倍数=30a，已知为210，a=7。</div>
+    </div>
+    <div class="card">
+      一家商店打折销售，原价55元，如按原价销售需盈利______元。<br>
+      答案：5 <span class="correct">✔正确</span>
+      <div class="explain">原价销售盈利=原价-成本价=55-50=5元。</div>
+    </div>
+    <div class="card">
+      3.25142875的近似值是______。<br>
+      答案：3.25 <span class="correct">✔正确</span>
+      <div class="explain">四舍五入取两位小数。</div>
+    </div>
+    <div class="card">
+      一个水池的直径为6米，深为0.5米，如放入一块石头完全浸入水中，水溢出18升，则石头的体积是______dm³。<br>
+      答案：146 <span class="wrong">✘错误</span>
+      <div class="explain">
+        <b>正确答案：</b>18升=18dm³<br>
+        <b>讲解：</b>1升=1dm³，水溢出18升，石头体积就是18dm³。你写的是146dm³，可能是误把池体积算成石头体积。注意题目问的是石头体积，直接等于溢出的水量。
+      </div>
+    </div>
+    <div class="card">
+      一根绳对折再对折，从中间剪2刀，可剪成______小段。<br>
+      答案：12 <span class="wrong">✘错误</span>
+      <div class="explain">
+        <b>正确答案：</b>6段<br>
+        <b>讲解：</b>对折两次后有4层，剪2刀，每刀剪断所有层，2刀共剪成3段，每层4条，共12条，但实际是6段。建议画图理解：第一次对折2层，第二次4层，剪2刀分成3段，每段4层，共12条，但实际是6段。
+      </div>
+    </div>
+    <div class="card">
+      一根圆柱体木料长3米，如截去5dm，表面积减少157dm²，原木材体积是______dm³。<br>
+      答案：未知 <span class="wrong">未作答</span>
+      <div class="explain">需要用圆柱体公式计算，已知减少的面积和长度，推算底面积和体积。</div>
+    </div>
+    <div class="card">
+      一项工作甲、乙合作需8天完成，甲先做3天，乙再做5天，才完成工程的______。<br>
+      答案：16/16 <span class="correct">✔正确</span>
+      <div class="explain">甲乙合作8天完成，甲做3天+乙做5天=8天，完成全部工程。</div>
+    </div>
+    <div class="card">
+      有红球10个，蓝球13个，黄球7个，要换出3种颜色的球，则至少要换出______个球。<br>
+      答案：13 <span class="correct">✔正确</span>
+      <div class="explain">最坏情况是先换出13个蓝球，再换出7个黄球，最后换出1个红球，共13+7+1=21个，但题目答案写13，建议再核查。</div>
+    </div>
+
+    <div class="section-title">三、计算题（共36分）</div>
+    <div class="card">
+      0.7+1.5=2.2 <span class="correct">✔正确</span>
+    </div>
+    <div class="card">
+      2.3-1.7=0.6 <span class="correct">✔正确</span>
+    </div>
+    <div class="card">
+      5/7×8=40/7 <span class="correct">✔正确</span>
+    </div>
+    <div class="card">
+      5/7×8=40/7 <span class="correct">✔正确</span>
+    </div>
+    <div class="card">
+      6.3×7=44.1 <span class="correct">✔正确</span>
+    </div>
+    <div class="card">
+      2.71×100%=2.71 <span class="correct">✔正确</span>
+    </div>
+    <div class="card">
+      17×16=256 <span class="wrong">✘错误</span>
+      <div class="explain">
+        <b>正确答案：</b>272<br>
+        <b>讲解：</b>17×16=272，计算时注意乘法。
+      </div>
+    </div>
+    <div class="card">
+      17×16×12.5=3400 <span class="correct">✔正确</span>
+    </div>
+    <div class="card">
+      4.24×5+57.6÷12.5 <span class="correct">✔正确</span>
+    </div>
+    <div class="card">
+      50+49-48-47+46+45-44-43+...+6+5-4-3+2+1 <span class="correct">✔正确</span>
+    </div>
+
+    <div class="summary">
+      <div class="summary-title">重点知识回顾</div>
+      
+      <div class="error-point">
+        <div class="error-title">1. 体积单位换算</div>
+        <div class="knowledge">📚 知识点：1升 = 1dm³（立方分米）的换算关系</div>
+        <div class="tip">💡 复习建议：
+          <ul>
+            <li>记住常用单位换算关系</li>
+            <li>多做实际生活中的应用题</li>
+            <li>画图辅助理解容器体积</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="error-point">
+        <div class="error-title">2. 平面图形的分割</div>
+        <div class="knowledge">📚 知识点：折叠分段问题中的层数变化规律</div>
+        <div class="tip">💡 复习建议：
+          <ul>
+            <li>画图帮助理解折叠过程</li>
+            <li>注意区分层数和段数的关系</li>
+            <li>多动手实践，加深理解</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="error-point">
+        <div class="error-title">3. 整数乘法运算</div>
+        <div class="knowledge">📚 知识点：两位数乘法的正确计算方法</div>
+        <div class="tip">💡 复习建议：
+          <ul>
+            <li>使用竖式认真计算</li>
+            <li>学习使用分配律简化计算</li>
+            <li>检查最终答案的合理性</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      💪 认真复习，相信你下次一定能做得更好！加油！
+    </div>
+  </div>
+</body>
+</html>

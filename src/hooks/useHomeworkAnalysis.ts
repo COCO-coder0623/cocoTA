@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { KnowledgeAreas } from '../types/education';
+import { KnowledgeAreas, QuestionAnalysis } from '../types/education';
 
 interface HomeworkAnalysisResult {
   description: string;
@@ -12,6 +12,10 @@ interface HomeworkAnalysisResult {
   strengths: string[];
   errorAnalysis: string;
   solutionApproach: string;
+  questions?: QuestionAnalysis[];
+  totalQuestions?: number;
+  correctQuestions?: number;
+  weakKnowledgeAreas?: string[];
 }
 
 export const useHomeworkAnalysis = () => {

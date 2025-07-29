@@ -6,6 +6,17 @@ export interface KnowledgeAreas {
   measurement: number;
 }
 
+export interface QuestionAnalysis {
+  questionNumber: number;
+  questionText: string;
+  studentAnswer: string;
+  isCorrect: boolean;
+  correctAnswer?: string;
+  explanation?: string;
+  knowledgeArea: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+}
+
 export interface AssessmentResult {
   id: string;
   description: string;
@@ -20,6 +31,10 @@ export interface AssessmentResult {
   solutionApproach: string;
   imageUrl: string;
   timestamp: Date;
+  questions?: QuestionAnalysis[];
+  totalQuestions?: number;
+  correctQuestions?: number;
+  weakKnowledgeAreas?: string[];
 }
 
 export interface LearningGoals {

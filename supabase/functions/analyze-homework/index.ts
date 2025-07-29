@@ -1,24 +1,40 @@
 /*
-  # Homework Analysis Edge Function
+  # Enhanced Homework Analysis Edge Function
 
   1. Purpose
-    - Analyzes homework images using OpenAI's GPT-4o Vision API
-    - Returns structured educational assessment information
+    - Analyzes homework images using OpenAI's GPT-4.1 Vision API
+    - Recognizes each individual question and answer
+    - Determines correctness for each question
+    - Provides detailed explanations for incorrect answers
+    - Identifies weak knowledge areas
     
   2. Input
     - Base64 encoded image data
     
   3. Output
-    - Detailed homework analysis with correctness assessment
-    - Error analysis and solution approach for incorrect answers
+    - Detailed question-by-question analysis
+    - Correctness assessment for each question
+    - Explanations and correct solutions for wrong answers
+    - Knowledge area weakness identification
 */
 
 import { corsHeaders } from '../_shared/cors.ts';
 
-console.log('Edge Function: analyze-homework is starting...');
+console.log('Edge Function: Enhanced analyze-homework is starting...');
 
 interface AnalysisRequest {
   image: string; // base64 encoded image
+}
+
+interface QuestionAnalysis {
+  questionNumber: number;
+  questionText: string;
+  studentAnswer: string;
+  isCorrect: boolean;
+  correctAnswer?: string;
+  explanation?: string;
+  knowledgeArea: string;
+  difficulty: 'easy' | 'medium' | 'hard';
 }
 
 interface KnowledgeAreas {
@@ -40,6 +56,10 @@ interface HomeworkAnalysisResult {
   strengths: string[];
   errorAnalysis: string;
   solutionApproach: string;
+  questions: QuestionAnalysis[];
+  totalQuestions: number;
+  correctQuestions: number;
+  weakKnowledgeAreas: string[];
 }
 
 const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
@@ -57,7 +77,7 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    console.log('Edge Function: Processing homework analysis request');
+    console.log('Edge Function: Processing enhanced homework analysis request');
     
     if (!OPENAI_API_KEY) {
       throw new Error('OpenAI API key not configured');
@@ -70,8 +90,8 @@ Deno.serve(async (req: Request) => {
       throw new Error('No image provided');
     }
 
-    console.log('Edge Function: Making request to OpenAI API');
-    // Call OpenAI GPT-4o Vision API
+    console.log('Edge Function: Making request to OpenAI API for detailed analysis');
+    // Call OpenAI GPT-4.1 Vision API
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -86,52 +106,51 @@ Deno.serve(async (req: Request) => {
             content: [
               {
                 type: 'text',
-                text: `Analyze this primary school mathematics homework image and provide a response in the following JSON format:
+                text: `作为一个专业的小学数学老师，请仔细分析这张数学作业图片，识别每一道题目并判断答案的正误。请按照以下JSON格式返回详细分析：
+
 {
-  "description": "Brief description of the math problems shown",
+  "description": "作业内容的简要描述",
   "subject": "Mathematics",
-  "isCorrect": boolean,
-  "completeness": number (0-100),
-  "logicCoherence": number (0-100),
+  "isCorrect": boolean (整体作业是否全部正确),
+  "completeness": number (0-100, 作业完成度),
+  "logicCoherence": number (0-100, 逻辑连贯性),
   "knowledgeAreas": {
-    "arithmetic": number (0-100),
-    "geometry": number (0-100),
-    "fractions": number (0-100),
-    "wordProblems": number (0-100),
-    "measurement": number (0-100)
+    "arithmetic": number (0-100, 算术能力),
+    "geometry": number (0-100, 几何能力),
+    "fractions": number (0-100, 分数能力),
+    "wordProblems": number (0-100, 应用题能力),
+    "measurement": number (0-100, 测量能力)
   },
-  "weakPoints": ["array of specific areas needing improvement"],
-  "strengths": ["array of areas where student performed well"],
-  "errorAnalysis": "detailed analysis of errors if answer is incorrect, empty string if correct",
-  "solutionApproach": "step-by-step solution method if answer is incorrect, empty string if correct"
+  "weakPoints": ["具体的薄弱环节"],
+  "strengths": ["学生的优势表现"],
+  "errorAnalysis": "错误题目的总体分析",
+  "solutionApproach": "改进建议和学习方法",
+  "questions": [
+    {
+      "questionNumber": 1,
+      "questionText": "题目内容",
+      "studentAnswer": "学生的答案",
+      "isCorrect": boolean,
+      "correctAnswer": "正确答案（如果学生答错）",
+      "explanation": "详细解释（特别是错误题目的解题步骤）",
+      "knowledgeArea": "涉及的知识点",
+      "difficulty": "easy/medium/hard"
+    }
+  ],
+  "totalQuestions": number,
+  "correctQuestions": number,
+  "weakKnowledgeAreas": ["需要加强的知识领域"]
 }
 
-CRITICAL ANALYSIS REQUIREMENTS:
-1. CORRECTNESS ASSESSMENT: Carefully examine each mathematical answer and solution step. Mark as correct ONLY if all answers and methods are mathematically accurate.
+分析要求：
+1. 仔细识别图片中的每一道题目和学生答案
+2. 准确判断每道题的正误
+3. 对于错误的题目，提供详细的解题步骤和正确答案
+4. 分析学生在哪些知识点上存在薄弱环节
+5. 给出具体的学习建议
+6. 使用中文进行解释和建议
 
-2. ERROR ANALYSIS (if incorrect): Provide detailed analysis including:
-   - Identify specific calculation errors or conceptual mistakes
-   - Explain why the student's approach was wrong
-   - Point out any missing steps or logical gaps
-   - Highlight misconceptions that led to the error
-
-3. SOLUTION APPROACH (if incorrect): Provide clear, step-by-step solution:
-   - Break down the problem into manageable steps
-   - Show the correct mathematical operations
-   - Explain the reasoning behind each step
-   - Provide the correct final answer
-   - Use simple language appropriate for primary school students
-
-4. ASSESSMENT CRITERIA:
-   - Rate completeness based on how much of the problem was attempted
-   - Rate logic coherence based on the mathematical reasoning shown
-   - Identify demonstrated knowledge areas and rate proficiency (0-100)
-   - List specific strengths (what the student did well)
-   - List specific weak points (areas needing improvement)
-
-Be thorough in your analysis - this feedback will help the student learn from their mistakes and improve their mathematical understanding.
-
-Return only the JSON object, no additional text.`
+请只返回JSON格式的结果，不要包含其他文字。`
               },
               {
                 type: 'image_url',
@@ -142,7 +161,7 @@ Return only the JSON object, no additional text.`
             ]
           }
         ],
-        max_tokens: 500,
+        max_tokens: 2000,
         temperature: 0.1
       }),
     });
@@ -173,7 +192,7 @@ Return only the JSON object, no additional text.`
         cleanContent = cleanContent.slice(3, -3).trim();
       }
       
-      console.log('Edge Function: Parsing analysis result');
+      console.log('Edge Function: Parsing enhanced analysis result');
       
       if (!cleanContent) {
         throw new Error('Empty content after cleaning');
@@ -194,7 +213,7 @@ Return only the JSON object, no additional text.`
     }
 
     // Validate and ensure proper data types with defaults
-    console.log('Edge Function: Validating and formatting response');
+    console.log('Edge Function: Validating and formatting enhanced response');
     analysisResult.completeness = Math.round(Number(analysisResult.completeness) || 0);
     analysisResult.logicCoherence = Math.round(Number(analysisResult.logicCoherence) || 0);
     analysisResult.isCorrect = Boolean(analysisResult.isCorrect);
@@ -202,6 +221,10 @@ Return only the JSON object, no additional text.`
     analysisResult.strengths = Array.isArray(analysisResult.strengths) ? analysisResult.strengths : [];
     analysisResult.errorAnalysis = String(analysisResult.errorAnalysis || '');
     analysisResult.solutionApproach = String(analysisResult.solutionApproach || '');
+    analysisResult.questions = Array.isArray(analysisResult.questions) ? analysisResult.questions : [];
+    analysisResult.totalQuestions = Number(analysisResult.totalQuestions) || 0;
+    analysisResult.correctQuestions = Number(analysisResult.correctQuestions) || 0;
+    analysisResult.weakKnowledgeAreas = Array.isArray(analysisResult.weakKnowledgeAreas) ? analysisResult.weakKnowledgeAreas : [];
     
     // Ensure knowledge areas are properly formatted with defaults
     const defaultKnowledgeAreas: KnowledgeAreas = {
@@ -219,7 +242,21 @@ Return only the JSON object, no additional text.`
         Math.round(Number(analysisResult.knowledgeAreas[typedKey]) || 0);
     });
 
-    console.log('Edge Function: Returning successful response');
+    // Validate questions array
+    if (analysisResult.questions) {
+      analysisResult.questions = analysisResult.questions.map(q => ({
+        questionNumber: Number(q.questionNumber) || 0,
+        questionText: String(q.questionText || ''),
+        studentAnswer: String(q.studentAnswer || ''),
+        isCorrect: Boolean(q.isCorrect),
+        correctAnswer: q.correctAnswer ? String(q.correctAnswer) : undefined,
+        explanation: q.explanation ? String(q.explanation) : undefined,
+        knowledgeArea: String(q.knowledgeArea || ''),
+        difficulty: q.difficulty || 'medium'
+      }));
+    }
+
+    console.log('Edge Function: Returning successful enhanced response');
     return new Response(
       JSON.stringify(analysisResult),
       {
@@ -233,7 +270,7 @@ Return only the JSON object, no additional text.`
 
   } catch (error) {
     console.error('Edge Function: Unexpected error:', error);
-    console.error('Homework analysis error:', error);
+    console.error('Enhanced homework analysis error:', error);
     
     return new Response(
       JSON.stringify({ 

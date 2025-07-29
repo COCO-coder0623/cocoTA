@@ -38,7 +38,7 @@ export const useHomeworkAnalysis = () => {
       const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
       
       if (!supabaseUrl || !supabaseKey) {
-        throw new Error('Supabase configuration missing. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your environment variables.');
+        throw new Error('Supabase configuration missing. Please connect to Supabase using the "Connect to Supabase" button in the top right corner.');
       }
       
       const apiUrl = `${supabaseUrl}/functions/v1/analyze-homework`;
@@ -61,6 +61,11 @@ export const useHomeworkAnalysis = () => {
       
       if (!response.ok) {
         console.log('Frontend: Response not OK, status:', response.status);
+        
+        if (response.status === 404) {
+          throw new Error('Edge Function not found. Please deploy the analyze-homework function to your Supabase project using the Supabase CLI: supabase functions deploy analyze-homework');
+        }
+        
         let errorMessage = 'Analysis failed';
         try {
           const errorData = await response.json();

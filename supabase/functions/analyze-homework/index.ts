@@ -106,51 +106,51 @@ Deno.serve(async (req: Request) => {
             content: [
               {
                 type: 'text',
-                text: `作为一个专业的小学数学老师，请仔细分析这张数学作业图片，识别每一道题目并判断答案的正误。请按照以下JSON格式返回详细分析：
+                text: `You are a professional elementary school math teacher. Please carefully analyze this math homework image, identify each question and determine whether the answers are correct or incorrect. Please return a detailed analysis in the following JSON format:
 
 {
-  "description": "作业内容的简要描述",
+  "description": "Brief description of the homework content",
   "subject": "Mathematics",
-  "isCorrect": boolean (整体作业是否全部正确),
-  "completeness": number (0-100, 作业完成度),
-  "logicCoherence": number (0-100, 逻辑连贯性),
+  "isCorrect": boolean,
+  "completeness": number,
+  "logicCoherence": number,
   "knowledgeAreas": {
-    "arithmetic": number (0-100, 算术能力),
-    "geometry": number (0-100, 几何能力),
-    "fractions": number (0-100, 分数能力),
-    "wordProblems": number (0-100, 应用题能力),
-    "measurement": number (0-100, 测量能力)
+    "arithmetic": number,
+    "geometry": number,
+    "fractions": number,
+    "wordProblems": number,
+    "measurement": number
   },
-  "weakPoints": ["具体的薄弱环节"],
-  "strengths": ["学生的优势表现"],
-  "errorAnalysis": "错误题目的总体分析",
-  "solutionApproach": "改进建议和学习方法",
+  "weakPoints": ["specific weak areas"],
+  "strengths": ["student strengths"],
+  "errorAnalysis": "overall analysis of errors",
+  "solutionApproach": "improvement suggestions",
   "questions": [
     {
       "questionNumber": 1,
-      "questionText": "题目内容",
-      "studentAnswer": "学生的答案",
+      "questionText": "question content",
+      "studentAnswer": "student's answer",
       "isCorrect": boolean,
-      "correctAnswer": "正确答案（如果学生答错）",
-      "explanation": "详细解释（特别是错误题目的解题步骤）",
-      "knowledgeArea": "涉及的知识点",
+      "correctAnswer": "correct answer (if student is wrong)",
+      "explanation": "detailed explanation (especially solution steps for incorrect answers)",
+      "knowledgeArea": "knowledge area involved",
       "difficulty": "easy/medium/hard"
     }
   ],
   "totalQuestions": number,
   "correctQuestions": number,
-  "weakKnowledgeAreas": ["需要加强的知识领域"]
+  "weakKnowledgeAreas": ["knowledge areas that need strengthening"]
 }
 
-分析要求：
-1. 仔细识别图片中的每一道题目和学生答案
-2. 准确判断每道题的正误
-3. 对于错误的题目，提供详细的解题步骤和正确答案
-4. 分析学生在哪些知识点上存在薄弱环节
-5. 给出具体的学习建议
-6. 使用中文进行解释和建议
+Analysis requirements:
+1. Carefully identify each question and student answer in the image
+2. Accurately determine the correctness of each question
+3. For incorrect questions, provide detailed solution steps and correct answers
+4. Analyze which knowledge points the student is weak in
+5. Give specific learning suggestions
+6. Use Chinese for explanations and suggestions
 
-请只返回JSON格式的结果，不要包含其他文字。`
+Please return only the JSON format result, no other text.`
               },
               {
                 type: 'image_url',

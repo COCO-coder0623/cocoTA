@@ -174,7 +174,9 @@ Deno.serve(async (req: Request) => {
 
     const openaiResult = await response.json();
     console.log('Edge Function: Received response from OpenAI');
+    console.log('Edge Function: Full OpenAI response:', JSON.stringify(openaiResult, null, 2));
     const content = openaiResult.choices[0]?.message?.content;
+    console.log('Edge Function: Extracted content:', content);
 
     if (!content) {
       console.log('Edge Function: No content in OpenAI response');

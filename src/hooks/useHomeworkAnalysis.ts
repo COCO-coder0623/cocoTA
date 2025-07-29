@@ -34,9 +34,16 @@ export const useHomeworkAnalysis = () => {
       });
 
       // Call Supabase Edge Function for homework analysis
-      const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/analyze-homework`;
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+      
+      if (!supabaseUrl || !supabaseKey) {
+        throw new Error('Supabase configuration missing. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your environment variables.');
+      }
+      
+      const apiUrl = `${supabaseUrl}/functions/v1/analyze-homework`;
       const headers = {
-        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        'Authorization': `Bearer ${supabaseKey}`,
         'Content-Type': 'application/json',
       };
 

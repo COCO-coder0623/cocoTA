@@ -106,13 +106,50 @@ Deno.serve(async (req: Request) => {
             content: [
               {
                 type: 'text',
-                text: `You are a professional elementary school math teacher. Please carefully analyze this math homework image, identify each question and determine whether the answers are correct or incorrect. Return the results in the following format:
-1. Carefully identify each question and student answer in the image
-2. Accurately determine the correctness of each question
-3. For incorrect questions, provide detailed solution steps and correct answers
-4. Analyze which knowledge points the student is weak in
-5. Give specific learning suggestions
-6. Use Chinese for explanations and suggestions.`
+                text: `You are a professional elementary school math teacher. Please carefully analyze this math homework image and return ONLY a valid JSON object in the exact format below. Do not include any other text, markdown formatting, or explanations outside the JSON.
+
+Required JSON format:
+{
+  "description": "Brief description of the homework in Chinese",
+  "subject": "数学",
+  "isCorrect": boolean (true if all answers are correct),
+  "completeness": number (0-100, percentage of questions completed),
+  "logicCoherence": number (0-100, overall logic score),
+  "knowledgeAreas": {
+    "arithmetic": number (0-100, mastery level),
+    "geometry": number (0-100, mastery level),
+    "fractions": number (0-100, mastery level),
+    "wordProblems": number (0-100, mastery level),
+    "measurement": number (0-100, mastery level)
+  },
+  "weakPoints": ["weak area 1 in Chinese", "weak area 2 in Chinese"],
+  "strengths": ["strength 1 in Chinese", "strength 2 in Chinese"],
+  "errorAnalysis": "Overall error analysis in Chinese",
+  "solutionApproach": "Solution approach suggestions in Chinese",
+  "questions": [
+    {
+      "questionNumber": number,
+      "questionText": "Question text in Chinese",
+      "studentAnswer": "Student's answer",
+      "isCorrect": boolean,
+      "correctAnswer": "Correct answer (if wrong)",
+      "explanation": "Detailed explanation in Chinese (if wrong)",
+      "knowledgeArea": "Knowledge area in Chinese",
+      "difficulty": "easy" | "medium" | "hard"
+    }
+  ],
+  "totalQuestions": number,
+  "correctQuestions": number,
+  "weakKnowledgeAreas": ["weak knowledge area 1", "weak knowledge area 2"]
+}
+
+Instructions:
+1. Identify each question and student answer in the image
+2. Determine correctness for each question
+3. For incorrect answers, provide detailed explanations and correct solutions in Chinese
+4. Analyze weak knowledge areas
+5. All text content should be in Chinese
+6. Return ONLY the JSON object, no additional text or formatting`
               },
               {
                 type: 'image_url',

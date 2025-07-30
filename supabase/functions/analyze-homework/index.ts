@@ -106,51 +106,13 @@ Deno.serve(async (req: Request) => {
             content: [
               {
                 type: 'text',
-                text: `You are a professional elementary school math teacher. Please carefully analyze this math homework image, identify each question and determine whether the answers are correct or incorrect. Please return a detailed analysis in the following JSON format:
-
-{
-  "description": "Brief description of the homework content",
-  "subject": "Mathematics",
-  "isCorrect": boolean,
-  "completeness": number,
-  "logicCoherence": number,
-  "knowledgeAreas": {
-    "arithmetic": number,
-    "geometry": number,
-    "fractions": number,
-    "wordProblems": number,
-    "measurement": number
-  },
-  "weakPoints": ["specific weak areas"],
-  "strengths": ["student strengths"],
-  "errorAnalysis": "overall analysis of errors",
-  "solutionApproach": "improvement suggestions",
-  "questions": [
-    {
-      "questionNumber": 1,
-      "questionText": "question content",
-      "studentAnswer": "student's answer",
-      "isCorrect": boolean,
-      "correctAnswer": "correct answer (if student is wrong)",
-      "explanation": "detailed explanation (especially solution steps for incorrect answers)",
-      "knowledgeArea": "knowledge area involved",
-      "difficulty": "easy/medium/hard"
-    }
-  ],
-  "totalQuestions": number,
-  "correctQuestions": number,
-  "weakKnowledgeAreas": ["knowledge areas that need strengthening"]
-}
-
-Analysis requirements:
+                text: `You are a professional elementary school math teacher. Please carefully analyze this math homework image, identify each question and determine whether the answers are correct or incorrect. Return the results in the following format:
 1. Carefully identify each question and student answer in the image
 2. Accurately determine the correctness of each question
 3. For incorrect questions, provide detailed solution steps and correct answers
 4. Analyze which knowledge points the student is weak in
 5. Give specific learning suggestions
-6. Use Chinese for explanations and suggestions
-
-Please return only the JSON format result, no other text.`
+6. Use Chinese for explanations and suggestions.`
               },
               {
                 type: 'image_url',
